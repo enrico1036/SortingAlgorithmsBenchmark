@@ -2,6 +2,10 @@
 #include "SortingAlgorithms.h"
 #include <string.h>
 
+#define FALSE 0
+#define TRUE 1
+typedef int bool;
+
 static inline void swap(int* a, int* b) {
     int tmp = *a;
     *a = *b;
@@ -87,11 +91,9 @@ void MergeSort(int arr[], int n) {
     merge(arr, 0, center-1, n-1);
 }
 
-#define FALSE 0
-#define TRUE 1
-typedef int bool;
 
-void BubbleSort(int* arr, unsigned int n){
+
+void BubbleSort(int arr[], int n){
     bool sorted = TRUE;
     while(!sorted)
     {
