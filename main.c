@@ -7,6 +7,15 @@
 #include <stdio.h>
 #include "SortingAlgorithms.h"
 
+void GenRandomArray(int* arr, unsigned int n, int minval, int maxval){
+    srand((unsigned) time(NULL));
+    for(int i=0; i<n; i++)
+    {
+        arr[i] = minval + rand()%(maxval-minval);
+    }
+}
+
+
 void PrintArray(int arr[], int n) {
     for(int i=0; i<n; i++)
         printf("%d\t", arr[i]);

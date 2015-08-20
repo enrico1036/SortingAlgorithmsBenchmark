@@ -86,3 +86,23 @@ void MergeSort(int arr[], int n) {
     MergeSort(&arr[center], n-center);
     merge(arr, 0, center-1, n-1);
 }
+
+#define FALSE 0
+#define TRUE 1
+typedef int bool;
+
+void BubbleSort(int* arr, unsigned int n){
+    bool sorted = TRUE;
+    while(!sorted)
+    {
+        sorted = TRUE;
+        for (int i=0; i < n-1; i++)
+        {
+            if(arr[i+1] < arr[i])
+            {
+                swap(&arr[i+1], &arr[i]);
+                sorted = FALSE;
+            }
+        }
+    }   
+}
