@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "SortingAlgorithms.h"
+#include <time.h>
 
 /* Prints the array sequentially */
 void PrintArray(int arr[], int n) {
