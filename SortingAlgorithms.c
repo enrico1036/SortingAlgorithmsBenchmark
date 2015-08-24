@@ -2,10 +2,6 @@
 #include "SortingAlgorithms.h"
 #include <string.h>
 
-#define FALSE 0
-#define TRUE 1
-typedef int bool;
-
 static inline void swap(int* a, int* b) {
     int tmp = *a;
     *a = *b;

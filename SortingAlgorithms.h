@@ -4,11 +4,11 @@
 
 #define FALSE 0
 #define TRUE 1
-typedef int bool;
+typedef unsigned char bool;
 
 void SelectionSort(int arr[], int n);
 void QuickSort(int arr[], int n);
 void MergeSort(int arr[], int n);
 void BubbleSort(int arr[], int n);
 
-#endif
+#endif 
