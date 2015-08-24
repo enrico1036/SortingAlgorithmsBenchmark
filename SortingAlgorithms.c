@@ -1,6 +1,8 @@
 
 #include "SortingAlgorithms.h"
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 static inline void swap(int* a, int* b) {
     int tmp = *a;
@@ -104,4 +106,29 @@ void BubbleSort(int arr[], int n){
         }
     }
 }
+
+void CocktailSort(int arr[], int n){
+    int min, max, minval, maxval;
+    for(int i=0; i<=(n-1)/2; i++){
+        min = i;
+        max = n-1-i;
+        for(int j=i; j<n-i; j++){
+            if(arr[j] < arr[min])
+                min = j;
+            else
+            if(arr[j] > arr[max])
+                max = j;
+        }
+        
+        minval = arr[min];
+        maxval = arr[max];
+        
+        arr[max] = arr[n-1-i];
+        arr[min] = arr[i];
+        
+        arr[n-1-i] = maxval;
+        arr[i] = minval;
+    }
+}
+
 
