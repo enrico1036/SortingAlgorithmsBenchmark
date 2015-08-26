@@ -11,14 +11,26 @@
 #include <sys/time.h>
 #include <string.h>
 
-/* Automatically generates a random array of n elements included between minval and maxval */
+/* Generates a random array of n elements included between minval and maxval */
 void GenRandomArray(int* arr, unsigned int n, int minval, int maxval);
+/* Generates an array of n elements in ascending order */
+void GenAscendingArray(int* arr, unsigned int n);
+/* Generates an array of n elements in descending order */
+void GenDescendingArray(int* arr, unsigned int n);
+/* Generates a flat array */
+void GenFlatArray(int* arr, unsigned int n);
+
 /* Returns TRUE if an array is correctly sorted */
 bool CheckSorted(int arr[], int n);
 /* Measures the time (in microseconds) used by the sorting algorithm alg */ 
 unsigned long MeasureMicroseconds(void (*alg)(int*, int), int v[], int n);
 /* Prints the array sequentially */
 void PrintArray(int arr[], int n);
+/* Performs a full benchmark of every algorithm in different conditions
+   Then exports the results into a csv file */
+void FullBenchmark(char* filename);
+
+extern int* merge_tmp;  // merge temporary array (see SortingAlgorithms.c)
 
 int main(int argc, const char * argv[]) {
     // Variables
@@ -71,10 +83,10 @@ int main(int argc, const char * argv[]) {
         }
         
         // Fill the array with random numbers
-        printf("Generating array of size %d...\r\n", n);
+        printf("Generating array of size %d (%.3f MB)...", n, (double)n*sizeof(int)/8.0e6F);
         arr = (int*) malloc(n * sizeof(int));
         GenRandomArray(arr, n, 1, n);
-        
+        printf("Done.\r\nExecuting...\r\n");
         // Print unsorted array
         if(print){
             printf("Unsorted array:\r\n");
@@ -89,13 +101,15 @@ int main(int argc, const char * argv[]) {
                 elapsed_time = MeasureMicroseconds(QuickSort, arr, n);
                 break;
             case '3':
+                merge_tmp = (int*) malloc(n * sizeof(int));
                 elapsed_time = MeasureMicroseconds(MergeSort, arr, n);
+                free(merge_tmp);
                 break;
             case '4':
                 elapsed_time = MeasureMicroseconds(BubbleSort, arr, n);
                 break;
             case '5':
-                elapsed_time = MeasureMicroseconds(DoubleSelectionSort, arr, n);
+                elapsed_time = MeasureMicroseconds(CocktailSort, arr, n);
                 break;
             case 'q':
                 printf("Exit\r\n");
@@ -117,7 +131,7 @@ int main(int argc, const char * argv[]) {
         printf("Time elapsed: %lu microseconds (%f seconds)\r\n", elapsed_time, (double)(elapsed_time / 1e6) );
         printf("Array%scorrectly sorted.\r\n", (CheckSorted(arr,n)) ? " " : " not ");
         
-        // Free array
+        // Free arrays
         free(arr);
         
         // Wait for a key then repeat
@@ -125,6 +139,11 @@ int main(int argc, const char * argv[]) {
         printf("\t##########\t\r\n\n");
     }
     return 0;
+}
+
+void FullBenchmark(char* filename){
+    FILE* fd = fopen(filename, "w+");
+    fprintf(fd, "%s;%s;")
 }
 
 void PrintArray(int arr[], int n) {
@@ -160,3 +179,19 @@ void GenRandomArray(int* arr, unsigned int n, int minval, int maxval){
         arr[i] = minval + rand()%(maxval-minval);
     }
 }
+
+void GenAscendingArray(int* arr, unsigned int n){
+    for (int i=0; i<n; i++)
+        arr[i] = i;
+}
+
+void GenDescendingArray(int* arr, unsigned int n){
+    for(int i=0; i<n; i++)
+        arr[i] = n-i-1;
+}
+
+void GenFlatArray(int* arr, unsigned int n){
+    for(int i=0; i<n; i++)
+        arr[i] = 1;
+}
+

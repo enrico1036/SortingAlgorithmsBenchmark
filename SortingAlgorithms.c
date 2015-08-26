@@ -19,38 +19,40 @@ void SelectionSort(int arr[], int n) {
         for(int j=i+1; j<n; j++)
             if(arr[j] < arr[min])
                 min = j;
-        
-        /*
-         int tmp = arr[i];
-         arr[i] = arr[min];
-         arr[min] = tmp;
-         */
         swap(&arr[i], &arr[min]);
     }
 }
 
 void QuickSort(int arr[], int n) {
+    // Implements Hoare partitioning
     if(n<2) return;
-    int i = 0;
-    int j = n-1;
-    while (i<j)
+    int i = -1;
+    int j = n;
+    int p = arr[0];
+    
+    while (TRUE)
     {
-        while (arr[j] > arr[0]) j--;
-        while (arr[i] <= arr[0] && i <= j) i++;
+        do { j--; } while ( arr[j] > p);
+        do { i++; } while ( arr[i] < p);
         if(i < j)
-        {
             swap(&arr[i], &arr[j]);
-            i++;
-            j--;
-        }
+        else
+            break;
     }
-    swap(&arr[0], &arr[j]);
-    QuickSort(arr, j);
+    QuickSort(arr, j+1);
     QuickSort(&arr[j+1], n-j-1);
 }
 
+/*
+  The temporary array for Mergesort.
+  It has to be dinamically allocated from caller function.
+  This way merge won't crash because of too big static arrays 
+  and should be faster.
+*/
+int* merge_tmp;
+
 void merge(int arr[], int left, int center, int right) {
-    int tmp[right+1];
+    //int tmp[right+1];
     int i = left;
     int j = center+1;
     int k = left;
@@ -59,26 +61,26 @@ void merge(int arr[], int left, int center, int right) {
     {
         if(arr[i]<=arr[j])
         {
-            tmp[k] = arr[i];
+            merge_tmp[k] = arr[i];
             i++;
         }else{
-            tmp[k] = arr[j];
+            merge_tmp[k] = arr[j];
             j++;
         }
         k++;
     }
     while (i<=center)
     {
-        tmp[k] = arr[i];
+        merge_tmp[k] = arr[i];
         i++;
         k++;
     }
     while (j<=right) {
-        tmp[k] = arr[j];
+        merge_tmp[k] = arr[j];
         j++;
         k++;
     }
-    memcpy(arr, tmp, (right+1)*sizeof(int));
+    memcpy(arr, merge_tmp, (right+1)*sizeof(int));
 }
 
 void MergeSort(int arr[], int n) {
