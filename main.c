@@ -34,12 +34,11 @@ extern int* merge_tmp;  // merge temporary array (see SortingAlgorithms.c)
 
 int main(int argc, const char * argv[]) {
     // Variables
-    unsigned int n = 100000;                    // Number of elements in the array
+    int n = 100000;                    // Number of elements in the array
     int* arr;                                   // Integer array
     char choice = 0;                            // Used to store the user's choice
     // Flags
-    bool print = FALSE;                         // The program outputs sorted array when TRUE    
-    bool varsize = FALSE;                       // The user has to manually input array size
+    bool print = FALSE;                         // The program outputs sorted array when TRUE
     
     // Handle arguments
     for(int i=0; i<argc; i++){
@@ -48,13 +47,13 @@ int main(int argc, const char * argv[]) {
         }
         else
         if(strcmp("varsize", argv[i]) == 0){
-            varsize = TRUE;
+            sscanf(argv[++i], "%d", &n);
         }
         else
         if(strcmp("help", argv[i]) == 0){
             printf("Add argument 'print' to output both unsorted and sorted arrays.\n");
-            printf("Add argument 'varsize' to manually input array size.\n");
-            printf("Default array size is 1e5, and it is randomly generated with numbers in range [1,size].\n");
+            printf("Add argument 'size' followed by positive integer to manually set array size.\n");
+            printf("Default array has size 1e5, and it is initialized with random numbers in range [1,size].\n");
             return 0;
         }
     }
@@ -66,27 +65,23 @@ int main(int argc, const char * argv[]) {
 
         // User chooses sorting algorithm
         printf("Select what algorithm you'd like to use: \r\n");
-        printf("1 - SelectionSort\r\n");
-        printf("2 - QuickSort\r\n");
-        printf("3 - MergeSort\r\n");
+        printf("\t1 - SelectionSort\t");
         printf("4 - BubbleSort\r\n");
+        printf("\t2 - QuickSort\t\t");
         printf("5 - CocktailSort\r\n");
+        printf("\t3 - MergeSort\t\t");
+        printf("q - Exit\r\n");
         
         scanf("%c", &choice);
         getchar();  // Discard the \n caused by Enter key
-        
-        // User inputs array size
-        if(varsize){
-            printf("Insert array size (positive integer): ");
-            scanf("%du", &n);
-            getchar();
-        }
+        if(choice == 'q') exit(0);
         
         // Fill the array with random numbers
         printf("Generating array of size %d (%.3f MB)...", n, (double)n*sizeof(int)/8.0e6F);
         arr = (int*) malloc(n * sizeof(int));
         GenRandomArray(arr, n, 1, n);
         printf("Done.\r\nExecuting...\r\n");
+        
         // Print unsorted array
         if(print){
             printf("Unsorted array:\r\n");
@@ -111,13 +106,10 @@ int main(int argc, const char * argv[]) {
             case '5':
                 elapsed_time = MeasureMicroseconds(CocktailSort, arr, n);
                 break;
-            case 'q':
-                printf("Exit\r\n");
-                return 0;
-                
+             
             default:
                 printf("%d", choice);
-                continue;
+                break;
         }
         
                     
@@ -143,7 +135,13 @@ int main(int argc, const char * argv[]) {
 
 void FullBenchmark(char* filename){
     FILE* fd = fopen(filename, "w+");
-    fprintf(fd, "%s;%s;")
+    // Write column titles
+    fprintf(fd, "%s;%s;%s;%s;%s\r\n", 
+    "Algoritmo", 
+    "Dimensione array", 
+    "Ordinamento iniziale" , 
+    "Tempo esecuzione (us)", 
+    "Corretto");
 }
 
 void PrintArray(int arr[], int n) {
@@ -176,7 +174,7 @@ void GenRandomArray(int* arr, unsigned int n, int minval, int maxval){
     srand((unsigned) time(NULL));
     for(int i=0; i<n; i++)
     {
-        arr[i] = minval + rand()%(maxval-minval);
+        arr[i] = minval + rand()%(maxval-minval + 1);
     }
 }
 

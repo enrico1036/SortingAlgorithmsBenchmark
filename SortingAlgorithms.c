@@ -52,7 +52,6 @@ void QuickSort(int arr[], int n) {
 int* merge_tmp;
 
 void merge(int arr[], int left, int center, int right) {
-    //int tmp[right+1];
     int i = left;
     int j = center+1;
     int k = left;
