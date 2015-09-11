@@ -24,7 +24,7 @@ void QuickSort(int arr[], int n) {
     if(n<2) return;
     int i = -1;
     int j = n;
-    int p = arr[0];
+    int p = arr[(n-1)/2];
     
     while (true)
     {
@@ -35,6 +35,7 @@ void QuickSort(int arr[], int n) {
         else
             break;
     }
+    
     QuickSort(arr, j+1);
     QuickSort(&arr[j+1], n-j-1);
 }

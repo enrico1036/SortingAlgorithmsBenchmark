@@ -70,11 +70,12 @@ int main(int argc, const char * argv[]) {
         }
         else
         if(strcmp("help", argv[i]) == 0){
-            printf("Add argument 'print' to output both unsorted and sorted arrays.\n");
-            printf("Add argument 'size <number>' to manually set array size.\n");
-            printf("Add argument 'benchmark' to start automatic benchmark.\n");
-            printf("Add argument 'slowsize <number>' to specify max size for slower algorithms (only for benchmark).\n");
-            printf("Default array has size 1e5, and it is initialized with random numbers in range [1,size].\n");
+            printf("Add argument print to output both unsorted and sorted arrays.\n");
+            printf("Add argument size <number> to manually set array size.\n");
+            printf("Add argument benchmark to start automatic benchmark.\n");
+            printf("Add argument arrtype followed by <random|ascending|descending> to specify initial array.\n");
+            //printf("Add argument 'slowsize <number>' to specify max size for slower algorithms (only for benchmark).\n");
+            printf("Default array has size 10k, and it is initialized with random numbers in range [1,size].\n");
             exit(0);
         }
     }
@@ -82,7 +83,6 @@ int main(int argc, const char * argv[]) {
     // Enter benchmark
     if(benchmark){
         if(size < 2) exit(0);
-        
         FullBenchmarkCSV("benchmark.csv", size, slowsize, 10, 10);
         exit(0);
     }
@@ -130,10 +130,16 @@ int main(int argc, const char * argv[]) {
         // Print sort results
         printf("Time elapsed: %lu microseconds (%f seconds)\r\n", elapsed_time, (double)(elapsed_time / 1e6) );
         printf("Array%scorrectly sorted.\r\n", (CheckSorted(arr, size)) ? " " : " not ");
-
+        
+        if(arr != NULL)
+            free(arr);
+        
         printf("    ###############    \r\n\n");
+        
     }
     
-    free(arr);
+    if(arr != NULL)
+        free(arr);
+    
     return 0;
 }
