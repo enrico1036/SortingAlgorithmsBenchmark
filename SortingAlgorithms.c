@@ -1,8 +1,5 @@
-
 #include "SortingAlgorithms.h"
 #include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 static inline void swap(int* a, int* b) {
     int tmp = *a;
@@ -24,13 +21,12 @@ void SelectionSort(int arr[], int n) {
 }
 
 void QuickSort(int arr[], int n) {
-    // Implements Hoare partitioning
     if(n<2) return;
     int i = -1;
     int j = n;
     int p = arr[0];
     
-    while (TRUE)
+    while (true)
     {
         do { j--; } while ( arr[j] > p);
         do { i++; } while ( arr[i] < p);
@@ -43,92 +39,97 @@ void QuickSort(int arr[], int n) {
     QuickSort(&arr[j+1], n-j-1);
 }
 
-/*
-  The temporary array for Mergesort.
-  It has to be dinamically allocated from caller function.
-  This way merge won't crash because of too big static arrays 
-  and should be faster.
-*/
-int* merge_tmp;
+// Merge's temporary array
+int* tmp_arr;
 
 void merge(int arr[], int left, int center, int right) {
     int i = left;
     int j = center+1;
     int k = left;
-    
+
     while (i<=center && j<=right)
     {
         if(arr[i]<=arr[j])
         {
-            merge_tmp[k] = arr[i];
+            tmp_arr[k] = arr[i];
             i++;
         }else{
-            merge_tmp[k] = arr[j];
+            tmp_arr[k] = arr[j];
             j++;
         }
         k++;
     }
     while (i<=center)
     {
-        merge_tmp[k] = arr[i];
+        tmp_arr[k] = arr[i];
         i++;
         k++;
     }
     while (j<=right) {
-        merge_tmp[k] = arr[j];
+        tmp_arr[k] = arr[j];
         j++;
         k++;
     }
-    memcpy(arr, merge_tmp, (right+1)*sizeof(int));
+    memcpy(arr, tmp_arr, (right+1)*sizeof(int));
+}
+
+void rec_merge_sort(int arr[], int n){
+    if (n<=1) return;
+    int center = (n)/2;
+    rec_merge_sort(arr, center);
+    rec_merge_sort(&arr[center], n-center);
+    merge(arr, 0, center-1, n-1);
 }
 
 void MergeSort(int arr[], int n) {
-    if (n<=1) return;
-    int center = (n)/2;
-    MergeSort(arr, center);
-    MergeSort(&arr[center], n-center);
-    merge(arr, 0, center-1, n-1);
+    tmp_arr = (int*) malloc(sizeof(int) * n);
+    rec_merge_sort(arr, n);
+    free(tmp_arr);
 }
 
 
 void BubbleSort(int arr[], int n){
-    bool sorted = FALSE;
+    bool sorted = false;
 
     while(!sorted)
     {
-        sorted = TRUE;
+        sorted = true;
         for (int i=0; i < n-1; i++)
         {
             if(arr[i+1] < arr[i])
             {
                 swap(&arr[i+1], &arr[i]);
-                sorted = FALSE;
+                sorted = false;
             }
         }
     }
 }
 
-void CocktailSort(int arr[], int n){
-    int min, max, minval, maxval;
-    for(int i=0; i<=(n-1)/2; i++){
-        min = i;
-        max = n-1-i;
-        for(int j=i; j<n-i; j++){
-            if(arr[j] < arr[min])
-                min = j;
-            else
-            if(arr[j] > arr[max])
-                max = j;
+void ShakerSort(int arr[], int n){
+    bool sorted = false;
+    bool descending = true;
+    
+    while(!sorted)
+    {
+        sorted = true;
+        if(descending){
+            for (int i=0; i < n-1; i++){
+                if(arr[i+1] < arr[i]){
+                    swap(&arr[i+1], &arr[i]);
+                    sorted = false;
+                }
+            }
+        }
+        else {
+            for (int i=n-1; i > 0; i--){
+                if(arr[i-1] > arr[i]){
+                    swap(&arr[i-1], &arr[i]);
+                    sorted = false;
+                }
+            }
         }
         
-        minval = arr[min];
-        maxval = arr[max];
-        
-        arr[max] = arr[n-1-i];
-        arr[min] = arr[i];
-        
-        arr[n-1-i] = maxval;
-        arr[i] = minval;
+        descending = !descending;
     }
 }
 
