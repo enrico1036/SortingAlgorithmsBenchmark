@@ -1,6 +1,7 @@
 #include "SortingAlgorithms.h"
 #include <string.h>
 
+//Useful function used by various algorithm to swap two elements
 static inline void swap(int* a, int* b) {
     int tmp = *a;
     *a = *b;
@@ -22,9 +23,9 @@ void SelectionSort(int arr[], int n) {
 
 void QuickSort(int arr[], int n) {
     if(n<2) return;
-    int i = -1;
-    int j = n;
-    int p = arr[(n-1)/2];
+    int i = -1;             //left index
+    int j = n;              //right index
+    int p = arr[(n-1)/2];   //pivot
     
     while (true)
     {
@@ -74,6 +75,7 @@ void merge(int arr[], int left, int center, int right) {
     memcpy(arr, tmp_arr, (right+1)*sizeof(int));
 }
 
+//The real Merge sort function
 void rec_merge_sort(int arr[], int n){
     if (n<=1) return;
     int center = (n)/2;
@@ -82,6 +84,7 @@ void rec_merge_sort(int arr[], int n){
     merge(arr, 0, center-1, n-1);
 }
 
+//Only a wrapper used to allocate memory for temporary array
 void MergeSort(int arr[], int n) {
     tmp_arr = (int*) malloc(sizeof(int) * n);
     rec_merge_sort(arr, n);

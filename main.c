@@ -80,7 +80,7 @@ int main(int argc, const char * argv[]) {
         }
     }
     
-    // Enter benchmark
+    // Enter benchmark if choosen
     if(benchmark){
         if(size < 2) exit(0);
         FullBenchmarkCSV("benchmark.csv", size, slowsize, 10, 10);
@@ -112,10 +112,11 @@ int main(int argc, const char * argv[]) {
         scanf("%c", &choice);
         getchar();  // Discard the \n caused by Enter key
         
+        // Quit program if q is choosen
         if(choice == 'q'){
             break;
         } 
-        else {
+        else { //if an algorithm is selected, start it and measure its time
             enum SortingAlgorithmID id;
             sscanf(&choice, "%d", &id);
             elapsed_time = MeasureMicroseconds(algorithms[id], arr, size);
